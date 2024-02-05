@@ -98,7 +98,7 @@ public class MovieCollection
 
             if (movieTitle.indexOf(searchTerm) != -1)
             {
-                //add the Movie objest to the results list
+                //add the Movie object to the results list
                 results.add(movies.get(i));
             }
         }
@@ -169,7 +169,54 @@ public class MovieCollection
 
     private void searchKeywords()
     {
+        System.out.print("Enter a keyword: ");
+        String keyword = scanner.nextLine();
 
+        // prevent case sensitivity
+       keyword = keyword.toLowerCase();
+
+        // arraylist to hold search results
+        ArrayList<Movie> results = new ArrayList<Movie>();
+
+        // search through ALL movies in collection
+        for (int i = 0; i < movies.size(); i++)
+        {
+            String movieTitle = movies.get(i).getKeywords();
+            movieTitle = movieTitle.toLowerCase();
+
+            if (movieTitle.indexOf(keyword) != -1)
+            {
+                //add the Movie object to the results list
+                results.add(movies.get(i));
+            }
+        }
+
+        // sort the results by title
+        sortResults(results);
+
+        // now, display them all to the user
+        for (int i = 0; i < results.size(); i++)
+        {
+            String title = results.get(i).getTitle();
+
+            // this will print index 0 as choice 1 in the results list; better for user!
+            int choiceNum = i + 1;
+
+            System.out.println("" + choiceNum + ". " + title);
+        }
+
+        System.out.println("Which movie would you like to learn more about?");
+        System.out.print("Enter number: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        Movie selectedMovie = results.get(choice - 1);
+
+        displayMovieInfo(selectedMovie);
+
+        System.out.println("\n ** Press Enter to Return to Main Menu **");
+        scanner.nextLine();
     }
 
     private void listGenres()
