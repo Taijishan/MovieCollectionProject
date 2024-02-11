@@ -1,13 +1,38 @@
+import java.awt.image.AreaAveragingScaleFilter;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class MovieCollection
 {
     private ArrayList<Movie> movies;
     private Scanner scanner;
+    private static ArrayList<String> actors = new ArrayList<String>();
+    private static ArrayList<String> genres = new ArrayList<String>();
+    private static ArrayList<Movie> action = new ArrayList<Movie>();
+    private static ArrayList<Movie> adventure = new ArrayList<Movie>();
+    private static ArrayList<Movie> animation = new ArrayList<Movie>();
+    private static ArrayList<Movie> comedicMovie = new ArrayList<Movie>();
+    private static ArrayList<Movie> crime = new ArrayList<Movie>();
+    private static ArrayList<Movie> documentary = new ArrayList<Movie>();
+    private static ArrayList<Movie> drama = new ArrayList<Movie>();
+    private static ArrayList<Movie> family = new ArrayList<Movie>();
+    private static ArrayList<Movie> fantasy = new ArrayList<Movie>();
+    private static ArrayList<Movie> foreignMovie = new ArrayList<Movie>();
+    private static ArrayList<Movie> historicalMovie = new ArrayList<Movie>();
+    private static ArrayList<Movie> horror = new ArrayList<Movie>();
+    private static ArrayList<Movie> musicalMovie = new ArrayList<Movie>();
+    private static ArrayList<Movie> mystery = new ArrayList<Movie>();
+    private static ArrayList<Movie> romance = new ArrayList<Movie>();
+    private static ArrayList<Movie> scifi = new ArrayList<Movie>();
+    private static ArrayList<Movie> tvMovie = new ArrayList<Movie>();
+    private static ArrayList<Movie> thriller = new ArrayList<Movie>();
+    private static ArrayList<Movie> war = new ArrayList<Movie>();
+    private static ArrayList<Movie> western = new ArrayList<Movie>();
 
     public MovieCollection(String fileName)
     {
@@ -164,32 +189,60 @@ public class MovieCollection
 
     private void searchCast()
     {
-        System.out.print("Enter a cast member: ");
-        String member = scanner.nextLine();
+        System.out.print("Enter an actor: ");
+        String searchTerm = scanner.nextLine();
 
         // prevent case sensitivity
-        member = member.toLowerCase();
-        ArrayList<Movie> results = new ArrayList<Movie>();
+        searchTerm = searchTerm.toLowerCase();
 
-        for (int i = 0; i < movies.size(); i++)
-        {
-            String movieCast = movies.get(i).getCast();
-            movieCast = movieCast.toLowerCase();
-
-            if (movieCast.substring(0).contains(member))
-            {
-                //add the Movie object to the results list
-                results.add(movies.get(i));
+        if (actors.isEmpty()) {
+            String allActors = "";
+            for (Movie m : movies) {
+                allActors += m.getCast() + "|";
+            }
+            String [] ActorsList = allActors.split("\\|");
+            for (String actor : ActorsList) {
+                if (!actors.contains(actor)) {
+                    actors.add(actor);
+                }
             }
         }
-        System.out.println("Which cast member would you like to learn more about?\nEnter number: ");
-        // sort the results by title
-        sortResults(results);
 
-        // now, display them all to the user
+        ArrayList<String> results = new ArrayList<String>();
+        for (String actor : actors) {
+            if (actor.toLowerCase().contains(searchTerm)) {
+                results.add(actor);
+            }
+        }
+        Collections.sort(results);
         for (int i = 0; i < results.size(); i++)
         {
-            String title = results.get(i).getTitle();
+            String title = results.get(i);
+
+            // this will print index 0 as choice 1 in the results list; better for user!
+            int choiceNum = i + 1;
+
+            System.out.println("" + choiceNum + ". " + title);
+        }
+        System.out.println("Which cast member would you like to learn more about?");
+        System.out.print("Enter number: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        String selectedActor = results.get(choice - 1);
+
+        ArrayList<Movie> movieResults = new ArrayList<Movie>();
+        for (Movie movie : movies) {
+            if (movie.getCast().contains(selectedActor)) {
+                movieResults.add(movie);
+            }
+        }
+        sortResults(movieResults);
+
+        for (int i = 0; i < movieResults.size(); i++)
+        {
+            String title = movieResults.get(i).getTitle();
 
             // this will print index 0 as choice 1 in the results list; better for user!
             int choiceNum = i + 1;
@@ -200,16 +253,18 @@ public class MovieCollection
         System.out.println("Which movie would you like to learn more about?");
         System.out.print("Enter number: ");
 
-        int choice = scanner.nextInt();
+        int choice2 = scanner.nextInt();
         scanner.nextLine();
 
-        Movie selectedMovie = results.get(choice - 1);
+        Movie selectedMovie = movieResults.get(choice2 - 1);
 
         displayMovieInfo(selectedMovie);
 
         System.out.println("\n ** Press Enter to Return to Main Menu **");
         scanner.nextLine();
     }
+
+
 
 
     private void searchKeywords()
@@ -264,10 +319,121 @@ public class MovieCollection
         scanner.nextLine();
     }
 
-    private void listGenres()
-    {
+    private void listGenres() {
+        if (genres.isEmpty()) {
+            String allGenres = "";
+            for (Movie movie : movies) {
+                allGenres += movie.getGenres() + "|";
+            }
+            String[] genresList = allGenres.split("\\|");
+            for (String genre : genresList) {
+                if (!genres.contains(genre)) {
+                    genres.add(genre);
+                }
+            }
+            Collections.sort(genres);
+        }
+        for (int i = 0; i < genres.size(); i++) {
+            String title = genres.get(i);
+            // this will print index 0 as choice 1 in the results list; better for user!
+            int choiceNum = i + 1;
 
+            System.out.println("" + choiceNum + ". " + title);
+        }
+
+        System.out.println("Which genre would you like to learn more about?");
+        System.out.print("Enter number: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        ArrayList<Movie> movieGenre = new ArrayList<Movie>();
+        if (action.isEmpty()){
+            sortMovieGenres();
+        }
+        if (choice == 1) {
+            movieGenre = action;
+        }
+        else if (choice == 2) {
+            movieGenre = adventure;
+        }
+        else if (choice == 3){
+            movieGenre = animation;
+        }
+        else if (choice == 4) {
+            movieGenre = comedicMovie;
+        }
+        else if (choice == 5) {
+            movieGenre = crime;
+        }
+        else if (choice == 6) {
+            movieGenre = documentary;
+        }
+        else if (choice == 7) {
+            movieGenre = drama;
+        }
+        else if (choice == 8) {
+            movieGenre = family;
+        }
+        else if (choice == 9) {
+            movieGenre = fantasy;
+        }
+        else if (choice == 10) {
+            movieGenre = foreignMovie;
+        }
+        else if (choice == 11) {
+            movieGenre = historicalMovie;
+        }
+        else if (choice == 12) {
+            movieGenre = horror;
+        }
+        else if (choice == 13) {
+            movieGenre = musicalMovie;
+        }
+        else if (choice == 14) {
+            movieGenre = mystery;
+        }
+        else if (choice == 15) {
+            movieGenre = romance;
+        }
+        else if (choice == 16) {
+            movieGenre = scifi;
+        }
+        else if (choice == 17) {
+            movieGenre = tvMovie;
+        }
+        else if (choice == 18) {
+            movieGenre = thriller;
+        }
+        else if (choice == 19) {
+            movieGenre = war;
+        }
+        else if (choice == 20) {
+            movieGenre = western;
+        }
+        sortResults(movieGenre);
+        for (int i = 0; i < movieGenre.size(); i++){
+            String title = movieGenre.get(i).getTitle();
+            // this will print index 0 as choice 1 in the results list; better for user!
+            int choiceNum = i + 1;
+
+            System.out.println("" + choiceNum + ". " + title);
+        }
+
+        System.out.println("Which movie would you like to learn more about?");
+        System.out.print("Enter number: ");
+
+        int secondChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        Movie selectedMovie = movieGenre.get(secondChoice - 1);
+
+        displayMovieInfo(selectedMovie);
+
+        System.out.println("\n ** Press Enter to Return to Main Menu **");
+        scanner.nextLine();
     }
+
 
     private void listHighestRated()
     {
@@ -279,6 +445,70 @@ public class MovieCollection
 
     }
 
+    private void sortMovieGenres() {
+        for (Movie movie : movies) {
+            if (movie.getGenres().contains("Action")) {
+                action.add(movie);
+            }
+            if (movie.getGenres().contains("Adventure")) {
+                adventure.add(movie);
+            }
+            if (movie.getGenres().contains("Animation")) {
+                animation.add(movie);
+            }
+            if (movie.getGenres().contains("Comedy")) {
+                comedicMovie.add(movie);
+            }
+            if (movie.getGenres().contains("Crime")) {
+                crime.add(movie);
+            }
+            if (movie.getGenres().contains("Documentary")) {
+                documentary.add(movie);
+            }
+            if (movie.getGenres().contains("Drama")) {
+                drama.add(movie);
+            }
+            if (movie.getGenres().contains("Family")) {
+                family.add(movie);
+            }
+            if (movie.getGenres().contains("Fantasy")) {
+                fantasy.add(movie);
+            }
+            if (movie.getGenres().contains("Foreign")) {
+                foreignMovie.add(movie);
+            }
+            if (movie.getGenres().contains("History")) {
+                historicalMovie.add(movie);
+            }
+            if (movie.getGenres().contains("Horror")) {
+                horror.add(movie);
+            }
+            if (movie.getGenres().contains("Music")) {
+                musicalMovie.add(movie);
+            }
+            if (movie.getGenres().contains("Mystery")) {
+                mystery.add(movie);
+            }
+            if (movie.getGenres().contains("Romance")) {
+                romance.add(movie);
+            }
+            if (movie.getGenres().contains("Science Fiction")) {
+                scifi.add(movie);
+            }
+            if (movie.getGenres().contains("TV Movie")) {
+                tvMovie.add(movie);
+            }
+            if (movie.getGenres().contains("Thriller")) {
+                thriller.add(movie);
+            }
+            if (movie.getGenres().contains("War")) {
+                war.add(movie);
+            }
+            if (movie.getGenres().contains("Western")) {
+                western.add(movie);
+            }
+        }
+    }
     private void importMovieList(String fileName)
     {
         try
