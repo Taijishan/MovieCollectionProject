@@ -33,6 +33,8 @@ public class MovieCollection
     private static ArrayList<Movie> thriller = new ArrayList<Movie>();
     private static ArrayList<Movie> war = new ArrayList<Movie>();
     private static ArrayList<Movie> western = new ArrayList<Movie>();
+    private static ArrayList<Movie> topRating = new ArrayList<Movie>();
+    private static ArrayList<Movie> topRevenue = new ArrayList<Movie>();
 
     public MovieCollection(String fileName)
     {
@@ -437,13 +439,100 @@ public class MovieCollection
 
     private void listHighestRated()
     {
+        if (topRating.isEmpty()) {
+            topRating.add(movies.get(0));
+            for (int i = 1; i < movies.size(); i++) {
+                if (topRating.size() < 50 || (topRating.size() == 50 && movies.get(50).getUserRating() > topRating.get(49).getUserRating())) {
+                    boolean listed = false;
+                    while (!listed) {
+                        for (int j = 0; j < topRating.size(); j++) {
+                            if (movies.get(i).getUserRating() >= topRating.get(j).getUserRating()) {
+                                topRating.add(j, movies.get(i));
+                                listed = true;
+                                break;
+                            }
+                        }
+                        if (!listed) {
+                            topRating.add(movies.get(i));
+                            listed = true;
+                        }
+                    }
+                }
+            }
+            topRating.remove(50);
+        }
+        for (int i = 0; i < topRating.size(); i++)
+        {
+            String title = topRating.get(i).getTitle();
 
+            // this will print index 0 as choice 1 in the results list; better for user!
+            int choiceNum = i + 1;
+
+            System.out.println("" + choiceNum + ". " + title + ": " + topRating.get(choiceNum - 1).getUserRating());
+        }
+
+        System.out.println("Which movie would you like to learn more about?");
+        System.out.print("Enter number: ");
+
+        int secondChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        Movie selectedMovie = topRating.get(secondChoice - 1);
+
+        displayMovieInfo(selectedMovie);
+
+        System.out.println("\n ** Press Enter to Return to Main Menu **");
+        scanner.nextLine();
     }
 
     private void listHighestRevenue()
     {
+        if (topRevenue.isEmpty()) {
+            topRevenue.add(movies.get(0));
+            for (int i = 1; i < movies.size(); i++) {
+                if (topRevenue.size() < 50 || (topRevenue.size() == 50 && movies.get(50).getRevenue() > topRevenue.get(49).getRevenue())) {
+                    boolean listed = false;
+                    while (!listed) {
+                        for (int j = 0; j < topRevenue.size(); j++) {
+                            if (movies.get(i).getRevenue() >= topRevenue.get(j).getRevenue()) {
+                                topRevenue.add(j, movies.get(i));
+                                listed = true;
+                                break;
+                            }
+                        }
+                        if (!listed) {
+                            topRevenue.add(movies.get(i));
+                            listed = true;
+                        }
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < topRevenue.size(); i++)
+        {
+            String title = topRevenue.get(i).getTitle();
 
+            // this will print index 0 as choice 1 in the results list; better for user!
+            int choiceNum = i + 1;
+
+            System.out.println("" + choiceNum + ". " + title + ": " + topRevenue.get(choiceNum - 1).getRevenue());
+        }
+
+        System.out.println("Which movie would you like to learn more about?");
+        System.out.print("Enter number: ");
+
+        int secondChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        Movie selectedMovie = topRevenue.get(secondChoice - 1);
+
+        displayMovieInfo(selectedMovie);
+
+        System.out.println("\n ** Press Enter to Return to Main Menu **");
+        scanner.nextLine();
     }
+
+
 
     private void sortMovieGenres() {
         for (Movie movie : movies) {
