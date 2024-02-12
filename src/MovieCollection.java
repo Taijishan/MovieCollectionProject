@@ -442,24 +442,29 @@ public class MovieCollection
         if (topRating.isEmpty()) {
             topRating.add(movies.get(0));
             for (int i = 1; i < movies.size(); i++) {
-                if (topRating.size() < 50 || (topRating.size() == 50 && movies.get(50).getUserRating() > topRating.get(49).getUserRating())) {
+                if (topRating.size() < 50 || (topRating.size() == 50 && movies.get(i).getUserRating() > topRating.get(49).getUserRating())) {
                     boolean listed = false;
                     while (!listed) {
                         for (int j = 0; j < topRating.size(); j++) {
                             if (movies.get(i).getUserRating() >= topRating.get(j).getUserRating()) {
                                 topRating.add(j, movies.get(i));
                                 listed = true;
+                                if (topRating.size() > 50){
+                                    topRating.remove(50);
+                                }
                                 break;
                             }
                         }
                         if (!listed) {
                             topRating.add(movies.get(i));
                             listed = true;
+                            if (topRating.size() > 50){
+                                topRating.remove(50);
+                            }
                         }
                     }
                 }
             }
-            topRating.remove(50);
         }
         for (int i = 0; i < topRating.size(); i++)
         {
